@@ -1,28 +1,54 @@
-from utils import lib
-import time, math, copy, traceback, threading
-from collections import deque
-start_time = time.time()
+# import numpy as np
+import copy
+import parse, time, math, traceback, threading
+from utils import libpypy as lib
 
 distances = lib.get_distances()
-
 demand = lib.get_demand()
 
-demand_to_tup = lambda a: tuple(sorted([(item[0], tuple(sorted(item[1].items()))) for item in a.items()]))
+dist_before_first_jump = 0
+history_before_first_jump = []
+dem2 = copy.deepcopy(demand)
+dem3 = {i: {j: 0 for j in range(1, 11)} for i in range(1, 11)}
+with open("input_16200.txt") as file:
+    for line in file.readlines():
+        tup = parse.parse("(1, {:d}, {:d}, {:d})\n", line)
+        if tup[2] == 0:
+            break
+        dem2[tup[0]][tup[1]] -= 1
+        dem3[tup[0]][tup[1]] += 1
+        dist_before_first_jump += distances[tup[0]][tup[1]]
+        history_before_first_jump.append((1, tup[0], tup[1], tup[2]))
+# print(dem2)
+print(dist_before_first_jump)
 
-# visited = {}
-# todo = deque([(1, demand_to_tup(demand), 0)]) # (position, demand, distance)
+# dem2mat = np.zeros((10, 10))
+# for start, ends in dem2.items():
+#     for end, num in ends.items():
+#         dem2mat[start-1, end-1] = num
+# print(dem2mat.sum())
 
-# while todo:
-#     position, dem, dist = todo.pop()
+# print(dem2mat)
 
-#     if (position, dem) in visited and visited[(position, dem)] <= dist:
-#         continue
-#     visited[(position, dem)] = dist
+new_demands = {}
+for i in dem2:
+    d = {j: val for j, val in dem2[i].items() if val > 0}
+    if len(d) > 0:
+        new_demands[i] = d
+print(new_demands)
+new_demands_before_jump = {}
+for i in dem3:
+    d = {j: val for j, val in dem3[i].items() if val > 0}
+    if len(d) > 0:
+        new_demands_before_jump[i] = d
+print(new_demands_before_jump)
 
-#     dem_parsed = {item[0]:{item2[0]:item2[1] for item2 in item[1]} for item in dem}
+start_time = time.time()
 
 visited = {}
 best = math.inf
+
+demand_to_tup = lambda a: tuple(sorted([(item[0], tuple(sorted(item[1].items()))) for item in a.items()]))
 def run(position, dem, dist, last_was_jump, depth, history, thread_index):
     global distances, visited, best
     
@@ -45,6 +71,7 @@ def run(position, dem, dist, last_was_jump, depth, history, thread_index):
         best = min(best, dist)
         print(str(history)+"\nNew Best:", best, "index:", thread_index, "time:", time.time() - start_time)
         # print(history)
+        # print("New Best:", best)
         # print(f"--- {(time.time() - start_time)} seconds ---")
         return
 
@@ -74,6 +101,9 @@ def run(position, dem, dist, last_was_jump, depth, history, thread_index):
             traceback.print_exc()
             print(distances, position)
 
+# demand[1][8] -= 1
+# run(9, new_demands, dist_before_first_jump, False, 1, history_before_first_jump)
+
 def thread_func(position, dem, dist, last_was_jump, depth, history, thread_index):
     return run(position, dem, dist, last_was_jump, depth, history, thread_index)
 
@@ -81,16 +111,11 @@ threads = []
 # x = threading.Thread(target=thread_func, args=(1, copy.deepcopy(demand), 0, False, 0, [], 1), daemon=True)
 # threads.append(x)
 # x.start()
-for i in sorted(demand[1], key=lambda other, pos=1: (len(demand.get(other, [])), distances[pos][other]), reverse=True):
-    dem = copy.deepcopy(demand)
-    dem[1][i] -= 1
-    for j in sorted(dem[i], key=lambda other, pos=i: (len(dem.get(other, [])), distances[pos][other]), reverse=True):
-        dem2 = copy.deepcopy(dem)
-        dem2[i][j] -= 1
-        x = threading.Thread(target=thread_func, args=(j, dem2, distances[1][i]+distances[i][j], False, 2, [(1, 1, i, 1), (1, i, j, 1)], (i, j)), daemon=True)
-        threads.append(x)
-        x.start()
+for i in sorted([p for p in new_demands if p != 9], key=lambda other, pos=9: (len(new_demands[other]), -distances[pos][other]), reverse=True):
+    dem = copy.deepcopy(new_demands)
+    x = threading.Thread(target=thread_func, args=(i, dem, dist_before_first_jump + distances[9][i], False, 1, history_before_first_jump + [(1, 9, i, 0)], i), daemon=True)
+    threads.append(x)
+    x.start()
 
 input()
-# run(1, demand, 0, False, 0, [])
 print(f"--- {(time.time() - start_time)} seconds ---")

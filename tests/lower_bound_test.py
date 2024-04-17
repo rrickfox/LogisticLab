@@ -36,21 +36,21 @@ def run(diff, dist, history):
     if dist >= best:
         return
     
-    if sum(x for x in diff.values() if x > 0) == 1:
+    if sum(x for x in diff.values() if x < 0) == -1:
         best = min(best, dist)
         print(history)
         print("New Best:", best)
         print(f"--- {(time.time() - start_time)} seconds ---")
         return
     
-    start = [i for i, num in diff.items() if num > 0][0]
-    for end in [i for i, num in diff.items() if num < 0]:
+    start = [i for i, num in diff.items() if num < 0][0]
+    for end in [i for i, num in diff.items() if num > 0]:
         # print(start, end)
         new_diff = copy.copy(diff)
-        new_diff[start] -= 1
+        new_diff[start] += 1
         if new_diff[start] == 0:
             new_diff.pop(start)
-        new_diff[end] += 1
+        new_diff[end] -= 1
         if new_diff[end] == 0:
             new_diff.pop(end)
         run(new_diff, dist + distances[start][end], history + [(start, end)])
