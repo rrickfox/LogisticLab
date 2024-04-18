@@ -19,11 +19,11 @@ Library with useful helper functions can be imported within that folder using `f
 
 ### Current solution
 
-full_depth_first_threading.py finds solution with score 16200.6507 after 115 seconds  
+`full_depth_first_threading.py` finds solution with score 16200.6507 after 115 seconds  
 taking solution, put history into file  
-start_with_first_jump.py refines solution to score 16156.79 after 172 seconds  
+`start_with_first_jump.py` refines solution to score 16156.79 after 172 seconds  
 
-Best solution after 287 seconds = 4 minutes 47 seconds  
+Best solution after 287 seconds ≙ 4 minutes 47 seconds  
 
 ### lower bound
 
