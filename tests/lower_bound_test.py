@@ -27,6 +27,7 @@ def jump_lower_bound(num_vehicles = 1):
 
     visited = {}
     best = [math.inf]
+    best_history = [[(0, 0)]]
     def run(diff, dist, history, visited, distances, best):
         # global visited, distances, best
 
@@ -39,7 +40,9 @@ def jump_lower_bound(num_vehicles = 1):
             return
         
         if sum(x for x in diff.values() if x < 0) == -num_vehicles:
-            best[0] = min(best[0], dist)
+            if dist < best[0]:
+                best[0] = dist
+                best_history[0] = history
             # print(history)
             # print("New Best:", best)
             # print(f"--- {(time.time() - start_time)} seconds ---")
@@ -58,10 +61,10 @@ def jump_lower_bound(num_vehicles = 1):
             run(new_diff, dist + distances[start][end], history + [(start, end)], visited, distances, best)
 
     run(differences, 0, [], visited, distances, best)
-    return best[0]
+    return best[0], best_history[0]
 
 if __name__ == "__main__":
-    best = jump_lower_bound(5)
+    best, _ = jump_lower_bound(5)
     distances = lib.get_distances()
     demand = lib.get_demand()
     print("Best:", best)
