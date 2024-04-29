@@ -1,6 +1,6 @@
 import copy
 import threading
-from utils import lib
+from utils import libpypy as lib
 import time, math
 start_time = time.time()
 
@@ -13,7 +13,7 @@ demand_to_tup = lambda a: tuple(sorted([(item[0], tuple(sorted(item[1].items()))
 visited = {}
 best = math.inf
 
-def run(vehicles: dict[int, tuple[int, int]], dem: dict[int, dict[int, int]], dists: list[int], last_was_jump: list[bool], depth: int, history: list[tuple[int, int, int, int]]):
+def run(vehicles, dem, dists, last_was_jump, depth, history):
     global distances, visited, best
     
     dem_tup = demand_to_tup(dem)
@@ -65,7 +65,7 @@ def run(vehicles: dict[int, tuple[int, int]], dem: dict[int, dict[int, int]], di
             run(v, d, dists2, l, depth + 1 , history + [(vehicle_id, position, next_pos, 1)])
 
     if position not in dem or not last_was_jump[vehicle_id - 1]: # no job available, jump to next machine
-        possible_next = sorted(filter(lambda other, vehics = vehicles: sum(dem[other].values()) > sum(v[0] == other for v in  vehics.values()), dem), key=lambda other, pos=position: (len(dem[other]), -distances[pos][other]), reverse=True) # jump to node with most demand (only nodes, not count), when more than one possible, use least distance
+        possible_next = sorted(filter(lambda other, vehics = vehicles, pos = position: sum(dem[other].values()) > sum(v[0] == other for v in  vehics.values()) and other != pos, dem), key=lambda other, pos=position: (len(dem[other]), -distances[pos][other]), reverse=True) # jump to node with most demand (only nodes, not count), when more than one possible, use least distance
         
         if len(possible_next) == 0:
             v = copy.deepcopy(vehicles)

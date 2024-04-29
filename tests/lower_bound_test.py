@@ -2,20 +2,24 @@ from utils import lib
 import math, time, copy
 start_time = time.time()
 
-def jump_lower_bound(num_vehicles = 1):
+def jump_lower_bound(num_vehicles = 1, demand = None, positions = None):
     distances = lib.get_distances()
 
-    demand = lib.get_demand()
+    if demand is None:
+        demand = lib.get_demand()
+    
+    if positions is None:
+        positions = [i+1 for i in range(num_vehicles)]
 
-    nodes = {i:[0, 0] for i in demand} # ausgehende, eingehende
+    nodes = {i:[0, 0] for i in range(1, 11)} # ausgehende, eingehende
     for i, endpoints in demand.items():
         nodes[i][0] = sum(endpoints.values())
         for j, num in endpoints.items():
             nodes[j][1] += num
 
     # print(nodes)
-    for i in range(num_vehicles):
-        nodes[i + 1][1] += 1
+    for i in positions:
+        nodes[i][1] += 1
 
     differences = {i: n1-n2 for i, (n1, n2) in nodes.items()} # neg = mehr eingehende, pos = mehr ausgehende
     # print(differences)
@@ -64,10 +68,11 @@ def jump_lower_bound(num_vehicles = 1):
     return best[0], best_history[0]
 
 if __name__ == "__main__":
-    best, _ = jump_lower_bound(5)
-    distances = lib.get_distances()
+    num_vehicles = 5
+    best, _ = jump_lower_bound(num_vehicles)
     demand = lib.get_demand()
-    print("Best:", best)
-    print("Lower bound, only demand", lib.calculate_lower_bound(demand, distances))
-    print("Lower bound, demand and jumps:", best + lib.calculate_lower_bound(demand, distances))
+    distances = lib.get_distances()
+    print("Best:", best / num_vehicles)
+    print("Lower bound, only demand", lib.calculate_lower_bound(demand, distances) / num_vehicles)
+    print("Lower bound, demand and jumps:", best / num_vehicles + lib.calculate_lower_bound(demand, distances) / num_vehicles)
     print(f"--- {(time.time() - start_time)} seconds ---")
