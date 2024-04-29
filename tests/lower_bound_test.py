@@ -13,7 +13,9 @@ for i, endpoints in demand.items():
         nodes[j][1] += num
 
 print(nodes)
-nodes[1][1] += 1
+num_vehicles = 1
+for i in range(num_vehicles):
+    nodes[i + 1][1] += 1
 
 differences = {i: n1-n2 for i, (n1, n2) in nodes.items()} # neg = mehr eingehende, pos = mehr ausgehende
 print(differences)
@@ -36,7 +38,7 @@ def run(diff, dist, history):
     if dist >= best:
         return
     
-    if sum(x for x in diff.values() if x < 0) == -1:
+    if sum(x for x in diff.values() if x < 0) == -num_vehicles:
         best = min(best, dist)
         print(history)
         print("New Best:", best)
