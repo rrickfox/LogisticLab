@@ -30,18 +30,25 @@ def get_demand() -> dict[int, dict[int, int]]:
 def write_history(name, history):
     with open(f"../{name}.txt", "w") as file:
         file.write("VehicleId;Location;unload;load\n")
-        for move, prev_move in zip(history, [(0,0,0,0)]+history[:-1]):
-            # print(move, prev_move)
-            if move[3] == 1:
-                if prev_move[3] == 1:
-                    tup = (move[0], move[1], 1, 1) # when moving now and moving before, unload and then load again
+        for i in range(1, 11):
+            filtered_history = list(filter(lambda h, pos=i: h[0] == pos, history))
+            # print(filtered_history)
+            if len(filtered_history) == 0:
+                continue
+            if i != 1:
+                file.write("\n")
+            for move, prev_move in zip(filtered_history, [(0,0,0,0)]+filtered_history[:-1]):
+                # print(move, prev_move)
+                if move[3] == 1:
+                    if prev_move[3] == 1:
+                        tup = (move[0], move[1], 1, 1) # when moving now and moving before, unload and then load again
+                    else:
+                        tup = (move[0], move[1], 0, 1) # no need to unload when teleporting before
                 else:
-                    tup = (move[0], move[1], 0, 1) # no need to unload when teleporting before
-            else:
-                if prev_move[3] == 1:
-                    tup = (prev_move[0], prev_move[2], 1, 0) # unload from previous
-            file.write(";".join(map(str, tup)) + "\n")
-        file.write(f"{history[-1][0]};{history[-1][2]};{history[-1][3]};0")
+                    if prev_move[3] == 1:
+                        tup = (prev_move[0], prev_move[2], 1, 0) # unload from previous
+                file.write(";".join(map(str, tup)) + "\n")
+            file.write(f"{filtered_history[-1][0]};{filtered_history[-1][2]};{filtered_history[-1][3]};0")
 
 def calculate_lower_bound(demand: dict[int, dict[int, int]], distances: dict[int, dict[int, int]]) -> float:
     return sum(sum(distances[start][end] * num for end, num in item.items()) for start, item in demand.items())
