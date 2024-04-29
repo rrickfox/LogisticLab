@@ -2,6 +2,7 @@ __author__ = "Karl-Benedikt Reith, Sebastian Rank"
 
 import glob
 import copy
+import traceback
 
 
 def validations(demand_file_name, schedule_file_names, machine_positions_file_name, velocity):
@@ -244,4 +245,5 @@ if __name__ == "__main__":
     except SystemExit:
         pass
     except Exception as e:
+        traceback.print_exc()
         print('unexpected error')
