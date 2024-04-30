@@ -25,12 +25,26 @@ taking solution, put history into file
 
 Best solution after 287 seconds ≙ 4 minutes 47 seconds  
 
+`one_vehicle_combined.py` finds best solution after 6.5 minutes  
+
+`five_vehicles_dfs_threading.py` finds solution with score  after  seconds  
+`start_with_first_jump_five.py` build on existing solution, finds solution 3257.64 after 12 seconds, nothing happens for at least 5615 seconds (93 minutes)  
+
 ### lower bound
 
-first approach:  
+First approach:  
 only sum up all transport jobs, value: 15049.49
 
-second approach:  
+Second approach:  
 also calculate how many jumps are needed, value: 1107.19  
 Needed jumps are found by seeing which machines have more outgoing transport demands than incoming demands and the other way around. This way the shortest possibility to connect all machines with more incoming demands to the machines with more outgoing demands can be found using a depth first search.  
+Can be understood as what paths need to be added to the graph in order for a eularian path to exist.  
 added to first approach: 16156.68
+
+Approach for multiple vehicles:  
+sum of transport jobs divided by number of vehicles  
+value for 5 vehicles: 3009.9, value for 10 vehicles: 1504.95  
+jumps analogous to one vehicle, searching for connections that need to be added for five or 10 parallel eularian paths, distance divided by number of vehicles  
+value for 5 vehicles: 215.34, value for 10 vehicles: 99.36  
+
+sum for 5 vehicles: 3225.24, value for 10 vehicles: 1604.31
