@@ -30,6 +30,9 @@ Best solution after 287 seconds ≙ 4 minutes 47 seconds
 `five_vehicles_dfs_threading.py` finds solution with score 3261.29 after  seconds  
 `start_with_first_jump_five.py` build on existing solution, finds solution 3259.18 after 1104 seconds (18.5 minutes), nothing happens for at least 14722 seconds (4 hours 5 minutes)  
 
+`ten_vehicles_dfs_threading.py` finds solution with score 1629.61 after 361 seconds  
+`start_with_first_jump_ten.py` build on existing solution, finds solution 1625.81 after 391 seconds
+
 ### lower bound
 
 First approach:  
