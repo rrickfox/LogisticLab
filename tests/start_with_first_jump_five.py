@@ -104,13 +104,19 @@ for tup in history:
     if tup[3] == 0:
         break
     last_pos[tup[0] - 1] = tup[2]
+    temp = vehicles[tup[0]][1]
     for v_id in vehicles:
-        vehicles[v_id] = (vehicles[v_id][0], vehicles[v_id][1] - last_dist[tup[0]-1])
-    last_dist[tup[0]-1] = distances[tup[1]][tup[2]]
+        vehicles[v_id] = (vehicles[v_id][0], vehicles[v_id][1] - temp)
+    vehicles[tup[0]] = (tup[2], distances[tup[1]][tup[2]])
+    # print(vehicles)
+    # last_dist[tup[0]-1] = distances[tup[1]][tup[2]]
     dem2[tup[1]][tup[2]] -= 1
     dem3[tup[1]][tup[2]] += 1
     dist_before_first_jump[tup[0]-1] += distances[tup[1]][tup[2]]
     history_before_first_jump.append(tup)
+
+# print(vehicles)
+# quit()
 
 new_demands = {}
 for i in dem2:
