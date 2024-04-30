@@ -27,8 +27,8 @@ Best solution after 287 seconds ≙ 4 minutes 47 seconds
 
 `one_vehicle_combined.py` finds best solution after 6.5 minutes  
 
-`five_vehicles_dfs_threading.py` finds solution with score  after  seconds  
-`start_with_first_jump_five.py` build on existing solution, finds solution 3257.64 after 12 seconds, nothing happens for at least 5615 seconds (93 minutes)  
+`five_vehicles_dfs_threading.py` finds solution with score 3261.29 after  seconds  
+`start_with_first_jump_five.py` build on existing solution, finds solution 3259.18 after 1104 seconds (18.5 minutes), nothing happens for at least 14722 seconds (4 hours 5 minutes)  
 
 ### lower bound
 

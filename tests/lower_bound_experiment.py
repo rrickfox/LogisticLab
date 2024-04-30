@@ -22,8 +22,8 @@ count_dist_demand = dict(sorted(count_dist_demand.items()))
 count_dist_jumps = {}
 for start, end in jump_lower_bound(num_vehicles)[1]:
     d = distances[start][end]
-    count_dist_jumps[d] = count_dist_jumps.get(d, 0) + demand[start][end]
-    count_complete[d] = count_complete.get(d, 0) + demand[start][end]
+    count_dist_jumps[d] = count_dist_jumps.get(d, 0) + 1
+    count_complete[d] = count_complete.get(d, 0) + 1
 
 count_dist_jumps = dict(sorted(count_dist_jumps.items()))
 count_complete = dict(sorted(count_complete.items()))
@@ -33,18 +33,19 @@ count_complete = dict(sorted(count_complete.items()))
 distributed_total = 0
 todo = []
 for i in list(count_complete.keys()):
-    distributed_total += count_complete[i] // 5 * i
+    distributed_total += count_complete[i] // num_vehicles * i
     count_complete[i] = count_complete[i] % num_vehicles
     todo += [i] * count_complete[i]
     if count_complete[i] == 0:
         count_complete.pop(i)
 
-todo.sort(reverse=True)
+todo.sort()
 print(count_complete)
 # print(todo)
 print(sum(count_complete.values()), "rest total")
 print("distributed total", distributed_total)
 expected_value = sum(todo) / num_vehicles
+print("expected value", expected_value)
 
 best = math.inf
 def run(todo, buckets):
