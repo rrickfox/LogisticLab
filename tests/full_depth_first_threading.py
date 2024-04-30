@@ -104,6 +104,6 @@ def one_vehicle_dfs_threading(timeout, debug = False):
 
 if __name__ == "__main__":
     start_time = time.time()
-    ret = one_vehicle_dfs_threading(180, True)
+    ret = one_vehicle_dfs_threading(90, True)
     print(ret)
     print(f"--- {(time.time() - start_time)} seconds ---")
