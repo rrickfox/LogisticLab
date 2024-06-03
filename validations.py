@@ -229,6 +229,7 @@ def validations(demand_file_name, schedule_file_names, machine_positions_file_na
 
             score = max(vehicle_times)
             print('Valid solution; Score for', schedule_file_name + ':', format(round(score, 4)), sep=' ')
+            print("Distances of all Vehicles:", [round(s, 4) for s in vehicle_times])
         # ############## score for valid solution ############################>
     return True
 

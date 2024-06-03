@@ -10,6 +10,7 @@ demand = lib.get_demand()
 
 position = 1
 history = []
+length = 0
 while demand:
     # print(demand)
     # vehicle is at position
@@ -26,6 +27,7 @@ while demand:
         
         # move
         history.append((1, position, next_pos, 1))
+        length += distances[position][next_pos]
         position = next_pos
         # print(demand)
     else: # no job available, jump to next machine
@@ -35,10 +37,12 @@ while demand:
         # next_pos = sorted(demand, key=lambda other, pos=position: distances[pos][other])[0] # jump to nearest
         # print("jumping to:", next_pos)
         history.append((1, position, next_pos, 0))
+        length += distances[position][next_pos]
         position = next_pos
 
 print(len(history))
 print(history)
+print(length)
 
 lib.write_history("schedule_longest_first", history)
 
